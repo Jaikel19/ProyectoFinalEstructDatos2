@@ -1,0 +1,2 @@
+12345,Gomez,Juan,5551234,juan@example.com,SanJose,Central,LaSabana
+67890,Perez,Ana,5555678,ana@example.com,Alajuela,Central,SanAntonio
