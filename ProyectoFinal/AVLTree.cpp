@@ -1,5 +1,9 @@
 #include "AVLTree.h"
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <string>
 
 // Constructor
 AVLTree::AVLTree() : root(nullptr) {}
@@ -164,6 +168,55 @@ void AVLTree::displayAscending() {
 // Recorrido descendente
 void AVLTree::displayDescending() {
     inOrderDesc(root);
+}
+
+void AVLTree::cargarDatos(const std::string& nombreArchivo)
+{
+    std::ifstream archivo(nombreArchivo);
+    std::string linea;
+
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string dato;
+        std::vector < std::string > datos;
+
+        while (std::getline(ss, dato, ',')) {
+            datos.push_back(dato);
+        }
+
+        if (datos.size() == 8) {
+            Artista artista(
+                datos[0], // cedula
+                datos[1], // nombre
+                datos[2], // apellido
+                datos[3], // telefono
+                datos[4], // email
+                datos[5], // provincia
+                datos[6], // canton
+                datos[7]  // barrio
+            );
+
+            insert(artista);
+        }
+    }
+    archivo.close();
+}
+
+void AVLTree::guardarDatos(const std::string& nombreArchivo)
+{
+    std::ofstream archivo(nombreArchivo);
+    if (archivo.is_open()) {
+        guardarEnArchivo(root, archivo);
+        archivo.close();
+    }
+}
+
+void AVLTree::guardarEnArchivo(NodoAVL* nodo, std::ofstream& archivo) {
+    if (nodo != nullptr) {
+        guardarEnArchivo(nodo->left, archivo);
+        archivo << nodo->data.toString() << std::endl;
+        guardarEnArchivo(nodo->right, archivo);
+    }
 }
 
 void AVLTree::inOrder(NodoAVL* node) {

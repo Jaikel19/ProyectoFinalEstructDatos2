@@ -27,6 +27,9 @@ public:
     void search(const std::string& cedula);
     void displayAscending();
     void displayDescending();
+    void cargarDatos(const std::string& nombreArchivo);
+    void guardarDatos(const std::string& nombreArchivo);
+    void guardarEnArchivo(NodoAVL* nodo, std::ofstream& archivo);
 };
 
 #endif

@@ -6,38 +6,6 @@
 #include <functional>
 #include <regex>
 
-void cargarArtistasDesdeArchivo(AVLTree& tree, const std::string& nombreArchivo) {
-    std::ifstream archivo(nombreArchivo);
-
-    if (!archivo.is_open()) {
-        std::cerr << "Error al abrir el archivo " << nombreArchivo << "\n";
-        return;
-    }
-
-    std::string linea;
-    while (getline(archivo, linea)) {
-        std::stringstream ss(linea);
-        std::string cedula, apellido, nombre, telefono, email, provincia, canton, barrio;
-
-        // leer y separar cada campo de la línea
-        getline(ss, cedula, ',');
-        getline(ss, apellido, ',');
-        getline(ss, nombre, ',');
-        getline(ss, telefono, ',');
-        getline(ss, email, ',');
-        getline(ss, provincia, ',');
-        getline(ss, canton, ',');
-        getline(ss, barrio, ',');
-
-        // crear objeto Artista e insertarlo en el árbol
-        Artista artista(cedula, apellido, nombre, telefono, email, provincia, canton, barrio);
-        tree.insert(artista);
-    }
-
-    archivo.close();
-    std::cout << "Artistas cargados exitosamente desde " << nombreArchivo << "\n";
-}
-
 bool validarCedula(const std::string& cedula) {
     return cedula.length() >= 9;
 }
@@ -69,21 +37,23 @@ std::string validarEntrada(const std::string& mensaje, std::function<bool(const 
 
 int main() {
     AVLTree tree;
-    int choice;
+    std::string nombreArchivo = "artistas.txt";
     std::string archivoNombre, cedula, apellido, nombre, telefono, email, provincia, canton, barrio;
+    
+    tree.cargarDatos(nombreArchivo);
 
+    int opcion;
     do {
         std::cout << "\n1. Insertar Artista\n";
         std::cout << "2. Eliminar Artista\n";
         std::cout << "3. Buscar Artista\n";
         std::cout << "4. Mostrar Artistas Ascendente\n";
         std::cout << "5. Mostrar Artistas Descendente\n";
-        std::cout << "6. Cargar Artistas desde Archivo\n";
-        std::cout << "7. Salir\n";
+        std::cout << "6. Salir\n";
         std::cout << "Elige una opcion: ";
-        std::cin >> choice;
+        std::cin >> opcion;
 
-        switch (choice) {
+        switch (opcion) {
         case 1:
             cedula = validarEntrada("Cedula: ", validarCedula, "La cedula debe tener al menos 9 caracteres.");
             nombre = validarEntrada("Nombre: ", validarLongitudMinima, "El nombre debe tener al menos 3 letras.");
@@ -120,19 +90,14 @@ int main() {
             break;
 
         case 6:
-            std::cout << "Nombre del archivo: ";
-            std::cin >> archivoNombre;
-            cargarArtistasDesdeArchivo(tree, archivoNombre);
-            break;
-
-        case 7:
-            std::cout << "Saliendo...\n";
+            std::cout << "Guardando datos y saliendo del programa...\n";
+            tree.guardarDatos(nombreArchivo);
             break;
 
         default:
             std::cout << "Opción inválida. Intenta de nuevo.\n";
         }
-    } while (choice != 7);
+    } while (opcion != 6);
 
     return 0;
 }

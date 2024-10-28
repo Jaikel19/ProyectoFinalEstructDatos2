@@ -13,3 +13,7 @@ void Artista::display() const {
         << ", Provincia: " << provincia << ", Canton: " << canton
         << ", Barrio: " << barrio << std::endl;
 }
+
+std::string Artista::toString() const {
+    return cedula + "," + nombre + "," + apellido + "," + telefono + "," + email + "," + provincia + "," + canton + "," + barrio;
+}

@@ -19,6 +19,7 @@ public:
             std::string email, std::string provincia, std::string canton, std::string barrio);
 
     void display() const;
+    std::string toString() const;
 };
 
 #endif
