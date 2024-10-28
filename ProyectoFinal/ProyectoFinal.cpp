@@ -3,6 +3,8 @@
 #include <sstream>
 #include "AVLTree.h"
 #include "Artista.h"
+#include <functional>
+#include <regex>
 
 void cargarArtistasDesdeArchivo(AVLTree& tree, const std::string& nombreArchivo) {
     std::ifstream archivo(nombreArchivo);
@@ -36,6 +38,35 @@ void cargarArtistasDesdeArchivo(AVLTree& tree, const std::string& nombreArchivo)
     std::cout << "Artistas cargados exitosamente desde " << nombreArchivo << "\n";
 }
 
+bool validarCedula(const std::string& cedula) {
+    return cedula.length() >= 9;
+}
+
+bool validarLongitudMinima(const std::string& entrada) {
+    return entrada.length() >= 3;
+}
+
+bool validarTelefono(const std::string& telefono) {
+    return telefono.length() >= 8;
+}
+
+bool validarCorreo(const std::string& correo) {
+    const std::regex pattern(R"((\w+)(\.\w+)*@(\w+\.)+(\w+))");
+    return std::regex_match(correo, pattern);
+}
+
+std::string validarEntrada(const std::string& mensaje, std::function<bool(const std::string&)> validador, const std::string& mensajeError) {
+    std::string entrada;
+    bool esValida;
+    do {
+        std::cout << mensaje;
+        std::cin >> entrada;
+        esValida = validador(entrada);
+        if (!esValida) std::cout << mensajeError << std::endl;
+    } while (!esValida);
+    return entrada;
+}
+
 int main() {
     AVLTree tree;
     int choice;
@@ -54,26 +85,27 @@ int main() {
 
         switch (choice) {
         case 1:
-            std::cout << "Cedula: "; std::cin >> cedula;
-            std::cout << "Apellido: "; std::cin >> apellido;
-            std::cout << "Nombre: "; std::cin >> nombre;
-            std::cout << "Telefono: "; std::cin >> telefono;
-            std::cout << "Email: "; std::cin >> email;
-            std::cout << "Provincia: "; std::cin >> provincia;
-            std::cout << "Canton: "; std::cin >> canton;
-            std::cout << "Barrio: "; std::cin >> barrio;
+            cedula = validarEntrada("Cedula: ", validarCedula, "La cedula debe tener al menos 9 caracteres.");
+            nombre = validarEntrada("Nombre: ", validarLongitudMinima, "El nombre debe tener al menos 3 letras.");
+            apellido = validarEntrada("Apellido: ", validarLongitudMinima, "El apellido debe tener al menos 3 letras.");
+            telefono = validarEntrada("Telefono: ", validarTelefono, "El telefono debe tener al menos 8 caracteres.");
+            email = validarEntrada("Email: ", validarCorreo, "El email ingresado no es valido.");
+            provincia = validarEntrada("Provincia: ", validarLongitudMinima, "La provincia debe tener al menos 3 letras.");
+            canton = validarEntrada("Canton: ", validarLongitudMinima, "El canton debe tener al menos 3 letras.");
+            barrio = validarEntrada("Barrio: ", validarLongitudMinima, "El barrio debe tener al menos 3 letras.");
+
             tree.insert(Artista(cedula, apellido, nombre, telefono, email, provincia, canton, barrio));
             break;
 
         case 2:
             std::cout << "Cedula del artista a eliminar: ";
-            std::cin >> cedula;
+            cedula = validarEntrada("Cedula: ", validarCedula, "La cedula debe tener al menos 9 caracteres.");
             tree.deleteNode(cedula);
             break;
 
         case 3:
             std::cout << "Cedula del artista a buscar: ";
-            std::cin >> cedula;
+            cedula = validarEntrada("Cedula: ", validarCedula, "La cedula debe tener al menos 9 caracteres.");
             tree.search(cedula);
             break;
 
@@ -104,9 +136,3 @@ int main() {
 
     return 0;
 }
-
-
-
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
