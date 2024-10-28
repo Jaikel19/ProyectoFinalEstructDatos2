@@ -9,6 +9,14 @@ bool esNumero(const std::string& str) {
     return std::all_of(str.begin(), str.end(), ::isdigit);
 }
 
+bool esCedulaValida(const std::string& cedula) {
+    return esNumero(cedula) && cedula.length() == 10;
+}
+
+bool esTelefonoValido(const std::string& telefono) {
+    return esNumero(telefono) && telefono.length() >= 8 && telefono.length() <= 10;
+}
+
 bool esEmailValido(const std::string& email) {
     const std::regex pattern("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
     return std::regex_match(email, pattern);
@@ -44,8 +52,13 @@ void cargarArtistasDesdeArchivo(AVLTree& tree, const std::string& nombreArchivo)
             continue;
         }
 
-        if (!esNumero(cedula) || !esNumero(telefono)) {
-            std::cerr << "Error en formato de cédula o teléfono en: " << linea << "\n";
+        if (!esCedulaValida(cedula)) {
+            std::cerr << "Error en formato de cédula en: " << linea << " - Debe tener exactamente 10 dígitos\n";
+            continue;
+        }
+
+        if (!esTelefonoValido(telefono)) {
+            std::cerr << "Error en formato de teléfono en: " << linea << " - Debe tener entre 8 y 10 dígitos\n";
             continue;
         }
 
@@ -82,8 +95,8 @@ int main() {
         switch (choice) {
         case 1:
             std::cout << "Cedula: "; std::cin >> cedula;
-            while (!esNumero(cedula)) {
-                std::cout << "Cedula inválida. Debe ser un número: ";
+            while (!esCedulaValida(cedula)) {
+                std::cout << "Cedula inválida. Debe tener exactamente 10 dígitos y ser numérica: ";
                 std::cin >> cedula;
             }
 
@@ -100,8 +113,8 @@ int main() {
             }
 
             std::cout << "Telefono: "; std::cin >> telefono;
-            while (!esNumero(telefono)) {
-                std::cout << "Telefono inválido. Debe ser un número: ";
+            while (!esTelefonoValido(telefono)) {
+                std::cout << "Telefono inválido. Debe tener entre 8 y 10 dígitos y ser numérico: ";
                 std::cin >> telefono;
             }
 
