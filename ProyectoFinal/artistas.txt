@@ -1,2 +1,10 @@
-12345,Gomez,Juan,5551234,juan@example.com,SanJose,Central,LaSabana
-67890,Perez,Ana,5555678,ana@example.com,Alajuela,Central,SanAntonio
+1234567890,Gomez,Juan,55512345,juan@example.com,SanJose,Central,LaSabana
+2345678901,Perez,Ana,55556789,ana@example.com,Alajuela,Central,SanAntonio
+3456789012,Morales,Carlos,55598765,carlos.morales@example.com,Heredia,Central,Guadalupe
+4567890123,Castro,Maria,55545678,maria.castro@example.com,Cartago,Carta,ElTejar
+5678901234,Rojas,Diego,55534567,diego.rojas@example.com,Limón,Central,Guapiles
+6789012345,Alvarado,Linda,55523456,linda.alvarado@example.com,Puntarenas,Puntarenas,Esparza
+7890123456,Jimenez,Sofia,55512346,sofia.jimenez@example.com,SantaCruz,Guanacaste,SantaCruz
+8901234567,Hernandez,Pedro,55523457,pedro.hernandez@example.com,SanCarlos,Alajuela,LaFortuna
+9012345678,Lopez,Paola,55534568,paola.lopez@example.com,SanJose,Central,SantaTeresa
+0123456789,Rodriguez,Martin,55545679,martin.rodriguez@example.com,SanJose,Escazu,SanRafael
