@@ -1,8 +1,18 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <regex>
 #include "AVLTree.h"
 #include "Artista.h"
+
+bool esNumero(const std::string& str) {
+    return std::all_of(str.begin(), str.end(), ::isdigit);
+}
+
+bool esEmailValido(const std::string& email) {
+    const std::regex pattern("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
+    return std::regex_match(email, pattern);
+}
 
 void cargarArtistasDesdeArchivo(AVLTree& tree, const std::string& nombreArchivo) {
     std::ifstream archivo(nombreArchivo);
@@ -17,7 +27,7 @@ void cargarArtistasDesdeArchivo(AVLTree& tree, const std::string& nombreArchivo)
         std::stringstream ss(linea);
         std::string cedula, apellido, nombre, telefono, email, provincia, canton, barrio;
 
-        // leer y separar cada campo de la línea
+        // Leer y separar cada campo de la línea
         getline(ss, cedula, ',');
         getline(ss, apellido, ',');
         getline(ss, nombre, ',');
@@ -27,7 +37,24 @@ void cargarArtistasDesdeArchivo(AVLTree& tree, const std::string& nombreArchivo)
         getline(ss, canton, ',');
         getline(ss, barrio, ',');
 
-        // crear objeto Artista e insertarlo en el árbol
+        // Validaciones básicas
+        if (cedula.empty() || apellido.empty() || nombre.empty() || telefono.empty() ||
+            email.empty() || provincia.empty() || canton.empty() || barrio.empty()) {
+            std::cerr << "Línea con datos incompletos: " << linea << "\n";
+            continue;
+        }
+
+        if (!esNumero(cedula) || !esNumero(telefono)) {
+            std::cerr << "Error en formato de cédula o teléfono en: " << linea << "\n";
+            continue;
+        }
+
+        if (!esEmailValido(email)) {
+            std::cerr << "Email inválido en: " << linea << "\n";
+            continue;
+        }
+
+        // Crear objeto Artista e insertarlo en el árbol
         Artista artista(cedula, apellido, nombre, telefono, email, provincia, canton, barrio);
         tree.insert(artista);
     }
@@ -55,13 +82,39 @@ int main() {
         switch (choice) {
         case 1:
             std::cout << "Cedula: "; std::cin >> cedula;
+            while (!esNumero(cedula)) {
+                std::cout << "Cedula inválida. Debe ser un número: ";
+                std::cin >> cedula;
+            }
+
             std::cout << "Apellido: "; std::cin >> apellido;
+            while (apellido.empty()) {
+                std::cout << "Apellido no puede estar vacío. Intenta de nuevo: ";
+                std::cin >> apellido;
+            }
+
             std::cout << "Nombre: "; std::cin >> nombre;
+            while (nombre.empty()) {
+                std::cout << "Nombre no puede estar vacío. Intenta de nuevo: ";
+                std::cin >> nombre;
+            }
+
             std::cout << "Telefono: "; std::cin >> telefono;
+            while (!esNumero(telefono)) {
+                std::cout << "Telefono inválido. Debe ser un número: ";
+                std::cin >> telefono;
+            }
+
             std::cout << "Email: "; std::cin >> email;
+            while (!esEmailValido(email)) {
+                std::cout << "Email inválido. Intenta de nuevo: ";
+                std::cin >> email;
+            }
+
             std::cout << "Provincia: "; std::cin >> provincia;
             std::cout << "Canton: "; std::cin >> canton;
             std::cout << "Barrio: "; std::cin >> barrio;
+
             tree.insert(Artista(cedula, apellido, nombre, telefono, email, provincia, canton, barrio));
             break;
 
@@ -104,9 +157,3 @@ int main() {
 
     return 0;
 }
-
-
-
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
